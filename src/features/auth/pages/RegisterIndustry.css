@@ -1,0 +1,168 @@
+/* Industry Registration — extra styles */
+
+.industry-reg-card {
+  max-width: 540px;
+}
+
+/* ── Step Indicator ── */
+.reg-steps {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0;
+  margin-top: 1.2rem;
+}
+
+.reg-step {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+
+.reg-step span {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.12);
+  border: 2px solid rgba(255, 255, 255, 0.25);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.5);
+  transition: all 0.4s ease;
+}
+
+.reg-step p {
+  font-size: 0.7rem;
+  color: rgba(255, 255, 255, 0.4);
+  margin: 0;
+  white-space: nowrap;
+  transition: color 0.4s ease;
+}
+
+.reg-step.active span {
+  background: rgba(255, 255, 255, 0.9);
+  border-color: #fff;
+  color: #4f46e5;
+}
+
+.reg-step.active p {
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.reg-step.done span {
+  background: rgba(134, 239, 172, 0.3);
+  border-color: rgba(134, 239, 172, 0.8);
+  color: #86efac;
+  font-size: 0;
+}
+
+.reg-step.done span::after {
+  content: "✓";
+  font-size: 0.85rem;
+  color: #86efac;
+}
+
+.reg-step.done p {
+  color: rgba(134, 239, 172, 0.8);
+}
+
+.reg-step-line {
+  width: 48px;
+  height: 2px;
+  background: rgba(255, 255, 255, 0.15);
+  margin: 0 4px;
+  margin-bottom: 18px;
+  transition: background 0.4s ease;
+  flex-shrink: 0;
+}
+
+.reg-step-line.done {
+  background: rgba(134, 239, 172, 0.6);
+}
+
+/* ── OTP hint text ── */
+.otp-hint {
+  text-align: center;
+  font-size: 0.88rem;
+  color: rgba(255, 255, 255, 0.7);
+  margin: 0 0 0.5rem 0;
+}
+
+/* ── OTP input reveal animation ── */
+.otp-input-reveal {
+  animation: slideFadeIn 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@keyframes slideFadeIn {
+  from { opacity: 0; transform: translateY(-10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ── Read-only input ── */
+.input-readonly {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+/* ── Resend OTP / back button ── */
+.otp-resend-btn {
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 12px;
+  padding: 0.7rem 1rem;
+  color: rgba(255, 255, 255, 0.65);
+  font-size: 0.88rem;
+  font-family: inherit;
+  cursor: pointer;
+  width: 100%;
+  transition: all 0.3s ease;
+  margin-top: -0.4rem;
+}
+
+.otp-resend-btn:hover {
+  border-color: rgba(255, 255, 255, 0.5);
+  color: #fff;
+  background: rgba(255, 255, 255, 0.05);
+}
+
+/* ── Section label ── */
+.reg-section-label {
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: rgba(255, 255, 255, 0.45);
+  margin-top: 0.5rem;
+  padding-bottom: 0.3rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* ── Textarea ── */
+.form-textarea {
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 12px;
+  padding: 0.85rem 1rem;
+  color: #fff;
+  font-size: 1rem;
+  font-family: inherit;
+  outline: none;
+  resize: vertical;
+  transition: all 0.3s ease;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.form-textarea::placeholder {
+  color: rgba(255, 255, 255, 0.4);
+}
+
+.form-textarea:focus {
+  border-color: rgba(255, 255, 255, 0.5);
+  background: rgba(255, 255, 255, 0.15);
+  box-shadow: 0 0 0 4px rgba(255, 255, 255, 0.08);
+}
