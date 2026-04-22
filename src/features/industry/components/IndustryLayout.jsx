@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 import { NavLink, Outlet, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { logout } from "../../auth/store/authSlice";
+import { getIndustryProfile } from "../services/industryApi";
+import IndustryProfileModal from "./IndustryProfileModal";
 import { 
   Home, 
   Search, 
@@ -23,6 +25,26 @@ export const IndustryLayout = () => {
   const [isDarkMode, setIsDarkMode] = useState(() => {
     return localStorage.getItem("theme") === "dark";
   });
+
+  const [industryName, setIndustryName] = useState(user?.companyName || user?.name || "Company Org");
+  const [isProfileModalOpen, setIsProfileModalOpen] = useState(false);
+
+  const fetchProfile = async () => {
+    try {
+      const data = await getIndustryProfile();
+      console.log("Fetched Profile Data:", data);
+      const fetchedName = data?.industryName || data?.companyName || data?.name || data?.data?.companyName || data?.data?.industryName || data?.data?.name || (typeof data === 'string' ? data : null);
+      if (fetchedName) {
+        setIndustryName(fetchedName);
+      }
+    } catch (error) {
+      console.error("Error fetching industry profile:", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchProfile();
+  }, []);
 
   useEffect(() => {
     if (isDarkMode) {
@@ -126,19 +148,22 @@ export const IndustryLayout = () => {
               <span className="absolute top-2 right-2 w-2 h-2 bg-red-500 rounded-full border-2 border-white dark:border-slate-800"></span>
             </button>
 
-            <div className="flex items-center gap-3 cursor-pointer pl-6 border-l border-slate-200 dark:border-slate-700 ml-1">
+            <button 
+              onClick={() => setIsProfileModalOpen(true)}
+              className="flex items-center gap-3 cursor-pointer pl-6 border-l border-slate-200 dark:border-slate-700 ml-1 bg-transparent hover:opacity-80 transition-opacity focus:outline-none border-none text-left p-0"
+            >
               <div className="text-right hidden md:block">
                 <p className="text-sm font-bold text-slate-700 dark:text-slate-200 mb-0.5">
-                  {user?.companyName || user?.name || "Company Org"}
+                  {industryName}
                 </p>
                 <p className="text-xs text-slate-500">
                   Industry Partner
                 </p>
               </div>
               <div className="h-10 w-10 rounded-full bg-emerald-100 dark:bg-emerald-900 border border-emerald-200 dark:border-emerald-700 flex items-center justify-center text-emerald-700 dark:text-emerald-300 font-bold shadow-sm shrink-0">
-                {(user?.companyName || user?.name || "C")[0].toUpperCase()}
+                {(industryName || "C")[0].toUpperCase()}
               </div>
-            </div>
+            </button>
           </div>
         </header>
 
@@ -147,6 +172,14 @@ export const IndustryLayout = () => {
           <Outlet />
         </main>
       </div>
+
+      <IndustryProfileModal 
+        isOpen={isProfileModalOpen} 
+        onClose={() => setIsProfileModalOpen(false)} 
+        onProfileUpdate={(newName) => {
+          if (newName) setIndustryName(newName);
+        }}
+      />
       
     </div>
   );

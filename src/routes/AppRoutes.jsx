@@ -11,6 +11,7 @@ import { Dashboard as IndustryDashboard } from "../features/industry/pages/Dashb
 import { PostInternship } from "../features/industry/pages/PostInternship";
 import { MyInternships } from "../features/industry/pages/MyInternships";
 import { Applications } from "../features/industry/pages/Applications";
+import { InternshipDetails } from "../features/industry/pages/InternshipDetails";
 
 import { StudentLayout } from "../features/student/components/StudentLayout";
 import { Dashboard as StudentDashboard } from "../features/student/pages/Dashboard";
@@ -49,6 +50,7 @@ export const AppRoutes = () => {
                 <Route path="dashboard" element={<IndustryDashboard />} />
                 <Route path="post-internship" element={<PostInternship />} />
                 <Route path="my-internships" element={<MyInternships />} />
+                <Route path="internships/view/:id" element={<InternshipDetails />} />
                 <Route path="applications" element={<Applications />} />
               </Route>
             </Route>

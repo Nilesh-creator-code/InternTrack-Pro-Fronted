@@ -11,11 +11,6 @@ export const createInternship = async (internshipData) => {
     const response = await axiosInstance.post(
       "/industry/internships/create",
       internshipData,
-      {
-        headers: {
-          "Authorization": `Bearer ${token}`
-        }
-      }
     );
     return response.data;
   } catch (error) {
@@ -31,10 +26,21 @@ export const getMyInternships = async () => {
   try {
     const token = localStorage.getItem("authToken");
     const response = await axiosInstance.get("/industry/internships/my-internships", {
-      headers: {
-        "Authorization": `Bearer ${token}`
-      }
     });
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+/**
+ * Get details of a specific internship
+ * @param {string} internshipId - ID of the internship
+ * @returns {Promise} Internship details
+ */
+export const getInternshipDetails = async (internshipId) => {
+  try {
+    const response = await axiosInstance.get(`/industry/internships/view/${internshipId}`);
     return response.data;
   } catch (error) {
     throw error;
@@ -83,6 +89,37 @@ export const updateApplicationStatus = async (internshipId, applicationId, statu
 export const getAllApplications = async () => {
   try {
     const response = await axiosInstance.get("/industry/applications");
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+/**
+ * Get industry profile
+ * @returns {Promise} Response from API
+ */
+export const getIndustryProfile = async () => {
+  try {
+    const token = localStorage.getItem("authToken");
+    const response = await axiosInstance.get("/industry-controller/profile", {
+    });
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+/**
+ * Update industry profile
+ * @param {Object} profileData - Updated profile data
+ * @returns {Promise} Response from API
+ */
+export const updateIndustryProfile = async (profileData) => {
+  try {
+    const token = localStorage.getItem("authToken");
+    const response = await axiosInstance.put("/industry-controller/profile/update", profileData, {
+    });
     return response.data;
   } catch (error) {
     throw error;

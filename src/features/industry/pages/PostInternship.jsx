@@ -4,6 +4,7 @@ import { AlertCircle, CheckCircle } from 'lucide-react';
 
 export const PostInternship = () => {
   const [formData, setFormData] = useState({
+    name: '',
     title: '',
     shortDescription: '',
     fullDescription: '',
@@ -31,6 +32,10 @@ export const PostInternship = () => {
 
   const validateForm = () => {
     // Required fields validation
+    if (!formData.name.trim()) {
+      setErrorMsg('Internship Name is required');
+      return false;
+    }
     if (!formData.title.trim()) {
       setErrorMsg('Title is required');
       return false;
@@ -118,6 +123,7 @@ export const PostInternship = () => {
         : [];
 
       const payload = {
+        name: formData.name,
         title: formData.title,
         shortDescription: formData.shortDescription,
         fullDescription: formData.fullDescription,
@@ -137,6 +143,7 @@ export const PostInternship = () => {
       setLoading(false);
       setSuccessMsg('Internship posted successfully!');
       setFormData({
+        name: '',
         title: '',
         shortDescription: '',
         fullDescription: '',
@@ -200,6 +207,20 @@ export const PostInternship = () => {
           <form onSubmit={handleSubmit} className="space-y-7">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
+                <label htmlFor="name" className="block text-sm font-semibold text-slate-900 dark:text-white mb-2">
+                  Internship Name <span className="text-red-500">*</span>
+                </label>
+                <input 
+                  type="text"
+                  id="name" 
+                  name="name" 
+                  className={inputClass}
+                  placeholder="e.g. TechNova Solutions" 
+                  value={formData.name} 
+                  onChange={handleChange}
+                />
+              </div>
+              <div>
                 <label htmlFor="title" className="block text-sm font-semibold text-slate-900 dark:text-white mb-2">
                   Internship Title <span className="text-red-500">*</span>
                 </label>
@@ -213,6 +234,9 @@ export const PostInternship = () => {
                   onChange={handleChange}
                 />
               </div>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
                 <label htmlFor="type" className="block text-sm font-semibold text-slate-900 dark:text-white mb-2">
                   Type <span className="text-red-500">*</span>

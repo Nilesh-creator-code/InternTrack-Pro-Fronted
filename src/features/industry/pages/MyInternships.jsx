@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { getMyInternships } from '../services/industryApi';
-import { Briefcase, Calendar, MapPin, DollarSign, Clock, Users } from 'lucide-react';
+import { Briefcase, Calendar, MapPin, DollarSign, Clock, Eye } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
 export const MyInternships = () => {
@@ -132,10 +132,10 @@ export const MyInternships = () => {
                   {getStatusBadge(internship.startDate, internship.endDate)}
                   
                   <button 
-                    onClick={() => navigate('/industry/applications')} 
+                    onClick={() => navigate(`/industry/internships/view/${internship.id}`)} 
                     className="text-sm font-bold text-slate-600 dark:text-slate-300 hover:text-emerald-600 dark:hover:text-emerald-400 flex items-center gap-1 transition-colors"
                   >
-                    <Users size={16} /> View Applicants
+                    <Eye size={16} /> View Details
                   </button>
                 </div>
               </div>
