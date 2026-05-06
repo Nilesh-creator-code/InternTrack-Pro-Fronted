@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import { getAllInternships, searchInternshipsByDomain, getInternshipDetails, applyToInternship } from "../services/studentApi";
+import { getAllInternships, searchInternshipsByDomain, getInternshipDetails } from "../services/studentApi";
 import { Search, Briefcase, MapPin, IndianRupee, Clock, ChevronLeft, ChevronRight, Loader2, X, CheckCircle } from "lucide-react";
 
 export const InternshipList = () => {
+    const navigate = useNavigate();
     const [internships, setInternships] = useState([]);
     const [loading, setLoading] = useState(true);
     const [searchDomain, setSearchDomain] = useState("");
@@ -69,15 +71,11 @@ export const InternshipList = () => {
         }
     };
 
-    const applyInternship = async (id) => {
-        try {
-            await applyToInternship(id);
-            toast.success("Application successful! You have successfully applied.");
-            setIsModalOpen(false);
-        } catch (error) {
-            const msg = error.response?.data?.message || typeof error.response?.data === 'string' ? error.response.data : "Failed to apply. You may have already applied.";
-            toast.error(msg);
-        }
+    const handleApplyClick = (internship) => {
+        setIsModalOpen(false);
+        navigate(`/student/internships/apply/${internship.id}`, {
+            state: { title: internship.title, company: internship.company },
+        });
     };
 
     return (
@@ -315,7 +313,7 @@ export const InternshipList = () => {
                             </button>
                             <button 
                                 disabled={modalLoading || !selectedInternship}
-                                onClick={() => applyInternship(selectedInternship?.id)}
+                                onClick={() => handleApplyClick(selectedInternship)}
                                 className="px-8 py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-xl font-bold shadow-md shadow-blue-600/20 transition-colors flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
                             >
                                 Apply Now

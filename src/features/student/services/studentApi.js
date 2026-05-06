@@ -24,11 +24,14 @@ export const getInternshipDetails = async (id) => {
   });
 };
 
-export const applyToInternship = async (internshipId) => {
-  const token = localStorage.getItem("authToken");
-  return axiosInstance.post(`/students/apply/${internshipId}`, {}, {
-    headers: {
-      "Authorization": `Bearer ${token}`
+export const submitApplication = async (formData) => {
+  return axiosInstance.post(
+    `/applications-controller/student/apply`,
+    formData,
+    {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
     }
-  });
+  );
 };

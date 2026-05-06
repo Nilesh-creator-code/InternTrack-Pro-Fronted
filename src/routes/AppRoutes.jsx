@@ -19,6 +19,7 @@ import { InternshipList } from "../features/student/pages/InternshipList";
 import { ApplicationStatus } from "../features/student/pages/ApplicationStatus";
 import { SavedInternships } from "../features/student/pages/SavedInternships";
 import { Profile } from "../features/student/pages/Profile";
+import { ApplyInternship } from "../features/student/pages/ApplyInternship";
 
 // Mock other components for now if they don't exist
 const Home = () => <Navigate to="/login" />;
@@ -41,6 +42,7 @@ export const AppRoutes = () => {
                 <Route path="applications" element={<ApplicationStatus />} />
                 <Route path="saved" element={<SavedInternships />} />
                 <Route path="profile" element={<Profile />} />
+                <Route path="internships/apply/:internshipId" element={<ApplyInternship />} />
               </Route>
             </Route>
             
