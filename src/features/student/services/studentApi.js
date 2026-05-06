@@ -13,7 +13,7 @@ export const searchInternshipsByDomain = (domain) =>
   axiosInstance.get(`/students/domain/${domain}`);
 
 export const getStudentApplications = () =>
-  axiosInstance.get(`/students/applications`);
+  axiosInstance.get(`/applications-controller/student/applications`);
 
 export const getInternshipDetails = async (id) => {
   const token = localStorage.getItem("authToken");
