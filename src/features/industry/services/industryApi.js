@@ -25,7 +25,7 @@ export const createInternship = async (internshipData) => {
 export const getMyInternships = async () => {
   try {
     const token = localStorage.getItem("authToken");
-    const response = await axiosInstance.get("/industry/internships/my-internships", {
+    const response = await axiosInstance.get("/internships/industry/my-internships", {
     });
     return response.data;
   } catch (error) {
@@ -40,7 +40,7 @@ export const getMyInternships = async () => {
  */
 export const getInternshipDetails = async (internshipId) => {
   try {
-    const response = await axiosInstance.get(`/industry/internships/view/${internshipId}`);
+    const response = await axiosInstance.get(`/internships/industry/view/${internshipId}`);
     return response.data;
   } catch (error) {
     throw error;
@@ -55,7 +55,7 @@ export const getInternshipDetails = async (internshipId) => {
 export const getInternshipApplications = async (internshipId) => {
   try {
     const response = await axiosInstance.get(
-      `/industry/internships/${internshipId}/applications`
+      `/internships/industry/${internshipId}/applications`
     );
     return response.data;
   } catch (error) {
@@ -73,7 +73,7 @@ export const getInternshipApplications = async (internshipId) => {
 export const updateApplicationStatus = async (internshipId, applicationId, status) => {
   try {
     const response = await axiosInstance.put(
-      `/industry/internships/${internshipId}/applications/${applicationId}`,
+      `/internships/industry/${internshipId}/applications/${applicationId}`,
       { status }
     );
     return response.data;

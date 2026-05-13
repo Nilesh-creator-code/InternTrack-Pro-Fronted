@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { getInternshipDetails } from '../services/industryApi';
 import { Briefcase, Calendar, MapPin, DollarSign, Clock, LayoutDashboard, ChevronLeft, CheckCircle2 } from 'lucide-react';
@@ -10,23 +10,32 @@ export const InternshipDetails = () => {
   const [loading, setLoading] = useState(true);
   const [errorMsg, setErrorMsg] = useState("");
 
-  useEffect(() => {
-    fetchInternshipDetails();
-  }, [id]);
-
-  const fetchInternshipDetails = async () => {
+  const fetchInternshipDetails = useCallback(async () => {
     try {
       setLoading(true);
-      const data = await getInternshipDetails(id);
-      setInternship(data);
+
+      const response = await getInternshipDetails(id);
+      const internshipData = response.data || response;
+
+      setInternship(internshipData);
       setErrorMsg("");
     } catch (error) {
-      console.error("Failed to fetch internship details:", error.response?.data || error.message);
-      setErrorMsg("Failed to load internship details. Please try again later.");
+      console.error(
+        "Failed to fetch internship details:",
+        error.response?.data || error.message
+      );
+
+      setErrorMsg(
+        "Failed to load internship details. Please try again later."
+      );
     } finally {
       setLoading(false);
     }
-  };
+  }, [id]);
+
+  useEffect(() => {
+    fetchInternshipDetails();
+  }, [fetchInternshipDetails]);
 
   const getStatusBadge = (startDate, endDate) => {
     if (!startDate || !endDate) return null;
@@ -39,6 +48,9 @@ export const InternshipDetails = () => {
     if (start > today) return <span className="bg-amber-100 text-amber-700 dark:bg-amber-900/40 dark:text-amber-400 px-4 py-1.5 rounded-full text-sm font-bold uppercase tracking-wider">Upcoming</span>;
     return <span className="bg-emerald-100 text-emerald-700 dark:bg-emerald-900/40 dark:text-emerald-400 px-4 py-1.5 rounded-full text-sm font-bold uppercase tracking-wider">Active</span>;
   };
+
+  const requiredSkills = internship?.skillRequired || internship?.skillsRequired || [];
+  const responsibilities = internship?.responsibilities || [];
 
   if (loading) {
     return (
@@ -94,11 +106,16 @@ export const InternshipDetails = () => {
                 </div>
                 <div className="flex flex-wrap items-center gap-4 text-slate-600 dark:text-slate-400 font-medium text-sm md:text-base">
                   <span className="flex items-center gap-1.5"><LayoutDashboard size={18} className="text-emerald-500" /> {internship.domain}</span>
-                  <span className="hidden md:inline text-slate-300 dark:text-slate-600">•</span>
+                  <span className="hidden md:inline text-slate-300 dark:text-slate-600">&bull;</span>
                   <span className="flex items-center gap-1.5"><Clock size={18} className="text-emerald-500" /> {internship.type || 'Full-time'}</span>
-                  <span className="hidden md:inline text-slate-300 dark:text-slate-600">•</span>
+                  <span className="hidden md:inline text-slate-300 dark:text-slate-600">&bull;</span>
                   <span className="flex items-center gap-1.5"><MapPin size={18} className="text-emerald-500" /> {internship.location}</span>
                 </div>
+                {internship.shortDescription && (
+                  <p className="mt-4 max-w-3xl text-slate-600 dark:text-slate-300 leading-relaxed">
+                    {internship.shortDescription}
+                  </p>
+                )}
               </div>
             </div>
           </div>
@@ -108,10 +125,20 @@ export const InternshipDetails = () => {
           
           {/* Main Content */}
           <div className="lg:col-span-2 space-y-8">
+            {/* Short Description */}
+            <div className="bg-white dark:bg-slate-800 rounded-3xl p-8 shadow-sm border border-slate-200 dark:border-slate-700">
+              <h2 className="text-xl font-bold text-slate-900 dark:text-white mb-6 flex items-center gap-2">
+                <Briefcase size={22} className="text-emerald-500" /> Short Description
+              </h2>
+              <p className="text-slate-600 dark:text-slate-300 leading-relaxed">
+                {internship.shortDescription || "No short description provided for this internship."}
+              </p>
+            </div>
+
             {/* Description */}
             <div className="bg-white dark:bg-slate-800 rounded-3xl p-8 shadow-sm border border-slate-200 dark:border-slate-700">
               <h2 className="text-xl font-bold text-slate-900 dark:text-white mb-6 flex items-center gap-2">
-                <LayoutDashboard size={22} className="text-emerald-500" /> Description
+                <LayoutDashboard size={22} className="text-emerald-500" /> About The Role
               </h2>
               <div className="prose prose-slate dark:prose-invert max-w-none text-slate-600 dark:text-slate-300 leading-relaxed whitespace-pre-wrap">
                 {internship.fullDescription || internship.shortDescription || "No detailed description provided for this internship."}
@@ -119,13 +146,13 @@ export const InternshipDetails = () => {
             </div>
 
             {/* Skills & Responsibilities */}
-            {(internship.skillsRequired?.length > 0 || internship.responsibilities?.length > 0) && (
+            {(requiredSkills.length > 0 || responsibilities.length > 0) && (
               <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                {internship.skillsRequired?.length > 0 && (
+                {requiredSkills.length > 0 && (
                   <div className="bg-white dark:bg-slate-800 rounded-3xl p-8 shadow-sm border border-slate-200 dark:border-slate-700">
                     <h2 className="text-xl font-bold text-slate-900 dark:text-white mb-6">Skills Required</h2>
                     <ul className="space-y-3">
-                      {internship.skillsRequired.map((skill, index) => (
+                      {requiredSkills.map((skill, index) => (
                         <li key={index} className="flex items-start gap-3 text-slate-600 dark:text-slate-300">
                           <CheckCircle2 size={20} className="text-emerald-500 shrink-0 mt-0.5" />
                           <span>{skill}</span>
@@ -135,11 +162,11 @@ export const InternshipDetails = () => {
                   </div>
                 )}
                 
-                {internship.responsibilities?.length > 0 && (
+                {responsibilities.length > 0 && (
                   <div className="bg-white dark:bg-slate-800 rounded-3xl p-8 shadow-sm border border-slate-200 dark:border-slate-700">
                     <h2 className="text-xl font-bold text-slate-900 dark:text-white mb-6">Responsibilities</h2>
                     <ul className="space-y-3">
-                      {internship.responsibilities.map((resp, index) => (
+                      {responsibilities.map((resp, index) => (
                         <li key={index} className="flex items-start gap-3 text-slate-600 dark:text-slate-300">
                           <CheckCircle2 size={20} className="text-blue-500 shrink-0 mt-0.5" />
                           <span>{resp}</span>
@@ -161,11 +188,49 @@ export const InternshipDetails = () => {
               <div className="space-y-5">
                 <div className="flex items-start gap-4">
                   <div className="h-10 w-10 bg-slate-50 dark:bg-slate-700 rounded-xl flex items-center justify-center shrink-0">
+                    <LayoutDashboard size={20} className="text-slate-600 dark:text-slate-300" />
+                  </div>
+                  <div>
+                    <p className="text-sm font-medium text-slate-500 dark:text-slate-400">Domain</p>
+                    <p className="font-bold text-slate-900 dark:text-white">{internship.domain || 'Not specified'}</p>
+                  </div>
+                </div>
+
+                <div className="flex items-start gap-4">
+                  <div className="h-10 w-10 bg-slate-50 dark:bg-slate-700 rounded-xl flex items-center justify-center shrink-0">
+                    <Clock size={20} className="text-slate-600 dark:text-slate-300" />
+                  </div>
+                  <div>
+                    <p className="text-sm font-medium text-slate-500 dark:text-slate-400">Type</p>
+                    <p className="font-bold text-slate-900 dark:text-white">{internship.type || 'Not specified'}</p>
+                  </div>
+                </div>
+
+                <div className="flex items-start gap-4">
+                  <div className="h-10 w-10 bg-slate-50 dark:bg-slate-700 rounded-xl flex items-center justify-center shrink-0">
+                    <MapPin size={20} className="text-slate-600 dark:text-slate-300" />
+                  </div>
+                  <div>
+                    <p className="text-sm font-medium text-slate-500 dark:text-slate-400">Location</p>
+                    <p className="font-bold text-slate-900 dark:text-white">{internship.location || 'Not specified'}</p>
+                  </div>
+                </div>
+
+                <div className="flex items-start gap-4">
+                  <div className="h-10 w-10 bg-slate-50 dark:bg-slate-700 rounded-xl flex items-center justify-center shrink-0">
                     <DollarSign size={20} className="text-slate-600 dark:text-slate-300" />
                   </div>
                   <div>
                     <p className="text-sm font-medium text-slate-500 dark:text-slate-400">Stipend</p>
-                    <p className="font-bold text-slate-900 dark:text-white text-lg">₹ {internship.stipend} <span className="text-sm font-normal text-slate-500">/ month</span></p>
+                    <p className="font-bold text-slate-900 dark:text-white text-lg">
+                      {internship.stipend ? (
+                        <>
+                          &#8377; {internship.stipend} <span className="text-sm font-normal text-slate-500">/ month</span>
+                        </>
+                      ) : (
+                        'Not specified'
+                      )}
+                    </p>
                   </div>
                 </div>
 
@@ -174,8 +239,18 @@ export const InternshipDetails = () => {
                     <Calendar size={20} className="text-slate-600 dark:text-slate-300" />
                   </div>
                   <div>
-                    <p className="text-sm font-medium text-slate-500 dark:text-slate-400">Duration</p>
-                    <p className="font-bold text-slate-900 dark:text-white">{internship.startDate} to {internship.endDate}</p>
+                    <p className="text-sm font-medium text-slate-500 dark:text-slate-400">Start Date</p>
+                    <p className="font-bold text-slate-900 dark:text-white">{internship.startDate || 'Not specified'}</p>
+                  </div>
+                </div>
+
+                <div className="flex items-start gap-4">
+                  <div className="h-10 w-10 bg-slate-50 dark:bg-slate-700 rounded-xl flex items-center justify-center shrink-0">
+                    <Calendar size={20} className="text-slate-600 dark:text-slate-300" />
+                  </div>
+                  <div>
+                    <p className="text-sm font-medium text-slate-500 dark:text-slate-400">End Date</p>
+                    <p className="font-bold text-slate-900 dark:text-white">{internship.endDate || 'Not specified'}</p>
                   </div>
                 </div>
 
@@ -185,7 +260,7 @@ export const InternshipDetails = () => {
                   </div>
                   <div>
                     <p className="text-sm font-medium text-slate-500 dark:text-slate-400">Application Deadline</p>
-                    <p className="font-bold text-rose-600 dark:text-rose-400">{internship.lastDateToApply}</p>
+                    <p className="font-bold text-rose-600 dark:text-rose-400">{internship.lastDateToApply || 'Not specified'}</p>
                   </div>
                 </div>
               </div>

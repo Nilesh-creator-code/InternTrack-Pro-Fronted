@@ -26,7 +26,7 @@ export const InternshipList = () => {
                 setTotalPages(res.data.totalPages || 1);
                 setPage(p);
             }
-        } catch (err) {
+        } catch {
             toast.error("Failed to load internships");
             setInternships([]);
         } finally {
@@ -45,7 +45,7 @@ export const InternshipList = () => {
             const res = await searchInternshipsByDomain(searchDomain);
             setInternships(res.data.content || res.data || []);
             setTotalPages(1); // Searches typically return flat lists
-        } catch (err) {
+        } catch {
             toast.error("Failed to search. Domain may not exist");
         } finally {
             setLoading(false);
@@ -63,7 +63,7 @@ export const InternshipList = () => {
         try {
             const res = await getInternshipDetails(id);
             setSelectedInternship(res.data);
-        } catch (err) {
+        } catch {
             toast.error("Failed to fetch internship details.");
             setIsModalOpen(false);
         } finally {
@@ -77,6 +77,9 @@ export const InternshipList = () => {
             state: { title: internship.title, company: internship.company },
         });
     };
+
+    const selectedSkills = selectedInternship?.skillRequired || selectedInternship?.skillsRequired || [];
+    const selectedResponsibilities = selectedInternship?.responsibilities || [];
 
     return (
         <div className="max-w-6xl mx-auto space-y-6 pb-8 relative">
@@ -235,25 +238,40 @@ export const InternshipList = () => {
                                                 {selectedInternship.type || 'Internship'}
                                             </span>
                                         </div>
+                                        <p className="text-slate-600 dark:text-slate-300 leading-relaxed">
+                                            {selectedInternship.shortDescription || "No short description provided."}
+                                        </p>
                                     </div>
 
                                     {/* Stats Grid */}
-                                    <div className="grid grid-cols-2 md:grid-cols-4 gap-4 p-4 bg-slate-50 dark:bg-slate-900 rounded-xl border border-slate-100 dark:border-slate-700">
+                                    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 p-4 bg-slate-50 dark:bg-slate-900 rounded-xl border border-slate-100 dark:border-slate-700">
+                                        <div>
+                                            <p className="text-xs text-slate-500 font-bold uppercase mb-1">Domain</p>
+                                            <p className="font-semibold text-slate-800 dark:text-slate-200">{selectedInternship.domain || "Not specified"}</p>
+                                        </div>
+                                        <div>
+                                            <p className="text-xs text-slate-500 font-bold uppercase mb-1">Type</p>
+                                            <p className="font-semibold text-slate-800 dark:text-slate-200">{selectedInternship.type || "Not specified"}</p>
+                                        </div>
                                         <div>
                                             <p className="text-xs text-slate-500 font-bold uppercase mb-1">Stipend</p>
-                                            <p className="font-semibold text-slate-800 dark:text-slate-200">₹ {selectedInternship.stipend} / month</p>
+                                            <p className="font-semibold text-slate-800 dark:text-slate-200">&#8377; {selectedInternship.stipend || "Not specified"} / month</p>
                                         </div>
                                         <div>
                                             <p className="text-xs text-slate-500 font-bold uppercase mb-1">Location</p>
-                                            <p className="font-semibold text-slate-800 dark:text-slate-200">{selectedInternship.location}</p>
+                                            <p className="font-semibold text-slate-800 dark:text-slate-200">{selectedInternship.location || "Not specified"}</p>
                                         </div>
                                         <div>
                                             <p className="text-xs text-slate-500 font-bold uppercase mb-1">Start Date</p>
-                                            <p className="font-semibold text-slate-800 dark:text-slate-200">{selectedInternship.startDate}</p>
+                                            <p className="font-semibold text-slate-800 dark:text-slate-200">{selectedInternship.startDate || "Not specified"}</p>
+                                        </div>
+                                        <div>
+                                            <p className="text-xs text-slate-500 font-bold uppercase mb-1">End Date</p>
+                                            <p className="font-semibold text-slate-800 dark:text-slate-200">{selectedInternship.endDate || "Not specified"}</p>
                                         </div>
                                         <div>
                                             <p className="text-xs text-slate-500 font-bold uppercase mb-1">Apply By</p>
-                                            <p className="font-semibold text-slate-800 dark:text-slate-200 text-rose-600 dark:text-rose-400">{selectedInternship.lastDateToApply}</p>
+                                            <p className="font-semibold text-slate-800 dark:text-slate-200 text-rose-600 dark:text-rose-400">{selectedInternship.lastDateToApply || "Not specified"}</p>
                                         </div>
                                     </div>
 
@@ -268,11 +286,11 @@ export const InternshipList = () => {
                                     </div>
 
                                     {/* Skills */}
-                                    {selectedInternship.skillsRequired && selectedInternship.skillsRequired.length > 0 && (
+                                    {selectedSkills.length > 0 && (
                                         <div>
                                             <h4 className="text-lg font-bold text-slate-900 dark:text-white mb-3">Skills Required</h4>
                                             <div className="flex flex-wrap gap-2">
-                                                {selectedInternship.skillsRequired.map((skill, index) => (
+                                                {selectedSkills.map((skill, index) => (
                                                     <span key={index} className="px-3 py-1.5 bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-400 border border-blue-100 dark:border-blue-800 rounded-lg text-sm font-medium">
                                                         {skill}
                                                     </span>
@@ -282,11 +300,11 @@ export const InternshipList = () => {
                                     )}
 
                                     {/* Responsibilities */}
-                                    {selectedInternship.responsibilities && selectedInternship.responsibilities.length > 0 && (
+                                    {selectedResponsibilities.length > 0 && (
                                         <div>
                                             <h4 className="text-lg font-bold text-slate-900 dark:text-white mb-3">Responsibilities</h4>
                                             <ul className="space-y-2">
-                                                {selectedInternship.responsibilities.map((resp, index) => (
+                                                {selectedResponsibilities.map((resp, index) => (
                                                     <li key={index} className="flex items-start gap-3">
                                                         <CheckCircle size={18} className="text-emerald-500 mt-0.5 shrink-0" />
                                                         <span className="leading-relaxed">{resp}</span>
