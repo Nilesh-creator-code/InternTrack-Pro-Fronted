@@ -27,3 +27,4 @@ export const registerStudent = (data) =>
 
 export const loginStudent = (data) =>
   axiosInstance.post(`/auth/student/login`, data);
+

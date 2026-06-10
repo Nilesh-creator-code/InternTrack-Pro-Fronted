@@ -6,16 +6,11 @@ import axiosInstance from "../../auth/services/axiosInstance";
  * @returns {Promise} Response from API
  */
 export const createInternship = async (internshipData) => {
-  try {
-    const token = localStorage.getItem("authToken");
-    const response = await axiosInstance.post(
-      "/industry/internships/create",
-      internshipData,
-    );
-    return response.data;
-  } catch (error) {
-    throw error;
-  }
+  const response = await axiosInstance.post(
+    "/industry/internships/create",
+    internshipData,
+  );
+  return response.data;
 };
 
 /**
@@ -23,14 +18,8 @@ export const createInternship = async (internshipData) => {
  * @returns {Promise} List of internships
  */
 export const getMyInternships = async () => {
-  try {
-    const token = localStorage.getItem("authToken");
-    const response = await axiosInstance.get("/internships/industry/my-internships", {
-    });
-    return response.data;
-  } catch (error) {
-    throw error;
-  }
+  const response = await axiosInstance.get("/internships/industry/my-internships");
+  return response.data;
 };
 
 /**
@@ -39,12 +28,8 @@ export const getMyInternships = async () => {
  * @returns {Promise} Internship details
  */
 export const getInternshipDetails = async (internshipId) => {
-  try {
-    const response = await axiosInstance.get(`/internships/industry/view/${internshipId}`);
-    return response.data;
-  } catch (error) {
-    throw error;
-  }
+  const response = await axiosInstance.get(`/internships/industry/view/${internshipId}`);
+  return response.data;
 };
 
 /**
@@ -53,14 +38,10 @@ export const getInternshipDetails = async (internshipId) => {
  * @returns {Promise} List of applications
  */
 export const getInternshipApplications = async (internshipId) => {
-  try {
-    const response = await axiosInstance.get(
-      `/internships/industry/${internshipId}/applications`
-    );
-    return response.data;
-  } catch (error) {
-    throw error;
-  }
+  const response = await axiosInstance.get(
+    `/internships/industry/${internshipId}/applications`
+  );
+  return response.data;
 };
 
 /**
@@ -71,15 +52,11 @@ export const getInternshipApplications = async (internshipId) => {
  * @returns {Promise} Response from API
  */
 export const updateApplicationStatus = async (internshipId, applicationId, status) => {
-  try {
-    const response = await axiosInstance.put(
-      `/internships/industry/${internshipId}/applications/${applicationId}`,
-      { status }
-    );
-    return response.data;
-  } catch (error) {
-    throw error;
-  }
+  const response = await axiosInstance.put(
+    `/internships/industry/${internshipId}/applications/${applicationId}`,
+    { status }
+  );
+  return response.data;
 };
 
 /**
@@ -87,12 +64,27 @@ export const updateApplicationStatus = async (internshipId, applicationId, statu
  * @returns {Promise} List of all applications
  */
 export const getAllApplications = async () => {
-  try {
-    const response = await axiosInstance.get("/industry/applications");
-    return response.data;
-  } catch (error) {
-    throw error;
-  }
+  const response = await axiosInstance.get("/applications-controller/industry/applications");
+  return response.data;
+};
+
+/**
+ * Update industry application status
+ * @param {string|number} applicationId - ID of the application
+ * @param {string} status - New status (APPROVED, REJECTED, ONGOING)
+ * @returns {Promise} Updated application or API response
+ */
+export const updateIndustryApplicationStatus = async (applicationId, status) => {
+  const response = await axiosInstance.put(
+    `/applications-controller/industry/updateApplication/${applicationId}`,
+    JSON.stringify(status),
+    {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    }
+  );
+  return response.data;
 };
 
 /**
@@ -100,14 +92,8 @@ export const getAllApplications = async () => {
  * @returns {Promise} Response from API
  */
 export const getIndustryProfile = async () => {
-  try {
-    const token = localStorage.getItem("authToken");
-    const response = await axiosInstance.get("/industry-controller/profile", {
-    });
-    return response.data;
-  } catch (error) {
-    throw error;
-  }
+  const response = await axiosInstance.get("/industry-controller/profile");
+  return response.data;
 };
 
 /**
@@ -116,12 +102,6 @@ export const getIndustryProfile = async () => {
  * @returns {Promise} Response from API
  */
 export const updateIndustryProfile = async (profileData) => {
-  try {
-    const token = localStorage.getItem("authToken");
-    const response = await axiosInstance.put("/industry-controller/profile/update", profileData, {
-    });
-    return response.data;
-  } catch (error) {
-    throw error;
-  }
+  const response = await axiosInstance.put("/industry-controller/profile/update", profileData);
+  return response.data;
 };
