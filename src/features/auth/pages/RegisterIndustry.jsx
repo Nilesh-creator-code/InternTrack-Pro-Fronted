@@ -8,6 +8,7 @@ import {
   verifyIndustryOtp,
   registerIndustry,
 } from "../services/authApi";
+import { getApiErrorMessage } from "../services/apiError";
 
 const selectStyle = {
   background: "rgba(255, 255, 255, 0.08)",
@@ -70,15 +71,12 @@ export const RegisterIndustry = () => {
       toast.success("OTP sent to your email!");
       setStep(2);
     } catch (err) {
-      // If we got a response from the server (even error status), the OTP may still
-      // have been sent — move to step 2 and let user try. Only block if no response at all.
       if (err.response) {
-        // Server responded (might have sent OTP anyway, e.g. 200 with non-JSON body)
-        toast.info("OTP sent! Please check your email and enter the code below.");
-        setStep(2);
+        const msg = getApiErrorMessage(err, "Failed to send OTP");
+        setEmailError(msg);
+        toast.error(msg);
       } else {
-        // True network failure — no connection to server
-        toast.error("Cannot reach server. Please check your connection.");
+        toast.error(getApiErrorMessage(err, "Failed to send OTP"));
       }
     } finally {
       setSendingOtp(false);
@@ -109,8 +107,7 @@ export const RegisterIndustry = () => {
       toast.success("OTP verified! Fill in your company details.");
       setStep(3);
     } catch (err) {
-      const msg = err.response?.data?.message || err.response?.data || "Invalid or expired OTP";
-      toast.error(typeof msg === "string" ? msg : "Invalid or expired OTP");
+      toast.error(getApiErrorMessage(err, "Invalid or expired OTP"));
     } finally {
       setVerifyingOtp(false);
     }
@@ -169,7 +166,7 @@ export const RegisterIndustry = () => {
       toast.success("Industry registered successfully!");
       navigate("/login");
     } catch (err) {
-      toast.error(err.response?.data?.message || "Registration failed");
+      toast.error(getApiErrorMessage(err, "Registration failed"));
     } finally {
       setRegistering(false);
     }

@@ -11,6 +11,7 @@ import {
   registerStudent,
   loginStudent
 } from "../services/authApi";
+import { getApiErrorMessage } from "../services/apiError";
 
 export const useAuth = () => {
   const navigate = useNavigate();
@@ -25,7 +26,7 @@ export const useAuth = () => {
       toast.success("OTP sent successfully");
       return true;
     } catch (error) {
-      toast.error(error.response?.data?.message || "Failed to send OTP");
+      toast.error(getApiErrorMessage(error, "Failed to send OTP"));
       return false;
     } finally {
       setLoading(false);
@@ -40,7 +41,7 @@ export const useAuth = () => {
       toast.success("OTP verified successfully");
       return response.data; // Contains { verified, verificationToken }
     } catch (error) {
-      toast.error(error.response?.data?.message || "Failed to verify OTP");
+      toast.error(getApiErrorMessage(error, "Failed to verify OTP"));
       return null;
     } finally {
       setLoading(false);
@@ -55,7 +56,7 @@ export const useAuth = () => {
       toast.success("Industry registered successfully");
       navigate("/login");
     } catch (error) {
-      toast.error(error.response?.data?.message || "Failed to register");
+      toast.error(getApiErrorMessage(error, "Failed to register"));
     } finally {
       setLoading(false);
     }
@@ -95,7 +96,7 @@ export const useAuth = () => {
         navigate("/student/dashboard");
       }
     } catch (error) {
-      toast.error(error.response?.data?.message || "Invalid credentials");
+      toast.error(getApiErrorMessage(error, "Invalid credentials"));
     } finally {
       setLoading(false);
     }
@@ -109,18 +110,7 @@ export const useAuth = () => {
       toast.success("Student registered successfully");
       navigate("/login");
     } catch (error) {
-      let errorMsg = "Failed to register";
-      if (error.response?.data) {
-        if (typeof error.response.data === "string") {
-          errorMsg = error.response.data;
-        } else if (error.response.data.message) {
-          errorMsg = error.response.data.message;
-        } else {
-          // It might be an array of errors or field errors
-          errorMsg = JSON.stringify(error.response.data);
-        }
-      }
-      toast.error(errorMsg);
+      toast.error(getApiErrorMessage(error, "Failed to register"));
     } finally {
       setLoading(false);
     }
@@ -162,7 +152,7 @@ export const useAuth = () => {
         navigate("/student/dashboard");
       }
     } catch (error) {
-      toast.error(error.response?.data?.message || "Invalid credentials");
+      toast.error(getApiErrorMessage(error, "Invalid credentials"));
     } finally {
       setLoading(false);
     }
