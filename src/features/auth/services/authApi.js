@@ -28,3 +28,15 @@ export const registerStudent = (data) =>
 export const loginStudent = (data) =>
   axiosInstance.post(`/auth/student/login`, data);
 
+export const sendCollegePasswordResetOtp = (email) =>
+  axiosInstance.get(`/auth/college/forgot-password?email=${encodeURIComponent(email)}`);
+
+export const verifyCollegePasswordResetOtp = (email, otp) =>
+  axiosInstance.post(`/auth/college/verify-reset-otp`, { email, otp });
+
+export const resetCollegePassword = (verificationToken, newPassword) =>
+  axiosInstance.post(`/auth/college/reset-password`, {
+    verificationToken,
+    newPassword,
+  });
+
