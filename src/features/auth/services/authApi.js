@@ -2,7 +2,6 @@ import axiosInstance from "./axiosInstance";
 
 
 // INDUSTRY APIs
-
 export const sayHello = () =>
   axiosInstance.get(`/industry-controller/hello`);
 
@@ -21,6 +20,9 @@ export const registerIndustry = (data) =>
 export const loginIndustry = (data) =>
   axiosInstance.post(`/auth/industry/login`, data);
 
+
+
+
 // STUDENT APIs
 export const registerStudent = (data) =>
   axiosInstance.post(`/auth/student/register`, data);
@@ -28,8 +30,10 @@ export const registerStudent = (data) =>
 export const loginStudent = (data) =>
   axiosInstance.post(`/auth/student/login`, data);
 
+
+/* College APIs */
 export const sendCollegePasswordResetOtp = (email) =>
-  axiosInstance.get(`/auth/college/forgot-password?email=${encodeURIComponent(email)}`);
+  axiosInstance.post(`/auth/college/forgot-password?email=${encodeURIComponent(email)}`);
 
 export const verifyCollegePasswordResetOtp = (email, otp) =>
   axiosInstance.post(`/auth/college/verify-reset-otp`, { email, otp });
