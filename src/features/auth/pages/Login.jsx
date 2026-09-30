@@ -54,7 +54,7 @@ export const Login = () => {
     const [forgotState, setForgotState] = useState(initialForgotPasswordState);
     
     // De-structure correct variables
-    const { loading, handleLoginStudent, handleLoginIndustry } = useAuth();
+    const { loading, handleLoginStudent, handleLoginIndustry, handleLoginCollege } = useAuth();
     const navigate = useNavigate();
 
     const updateForgotState = (changes) => {
@@ -78,6 +78,8 @@ export const Login = () => {
 
         if (role === "student") {
             await handleLoginStudent(email, password);
+        } else if (role === "college") {
+            await handleLoginCollege(email, password);
         } else {
             await handleLoginIndustry(email, password);
         }
@@ -501,28 +503,39 @@ export const Login = () => {
               </div>
 
               {/* Role Selector Tabs (Replaced Dropdown) */}
-              <div className="flex p-1 bg-slate-800/80 rounded-xl mb-8 border border-slate-700/50 shadow-inner">
+              <div className="grid grid-cols-3 gap-2 p-1 bg-slate-800/80 rounded-xl mb-8 border border-slate-700/50 shadow-inner">
                 <button
                   type="button"
                   onClick={() => setRole("student")}
-                  className={`flex-1 py-3 px-4 rounded-lg flex items-center justify-center gap-2 font-bold text-sm transition-all duration-300 ${
+                  className={`py-3 px-2 rounded-lg flex items-center justify-center gap-1 font-bold text-xs transition-all duration-300 ${
                     role === "student" 
                       ? "bg-blue-600 text-white shadow-md shadow-blue-900/30" 
                       : "text-slate-400 hover:text-slate-200 hover:bg-slate-700/50"
                   }`}
                 >
-                  <User size={18} /> Student
+                  <User size={16} /> Student
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setRole("college")}
+                  className={`py-3 px-2 rounded-lg flex items-center justify-center gap-1 font-bold text-xs transition-all duration-300 ${
+                    role === "college" 
+                      ? "bg-violet-600 text-white shadow-md shadow-violet-900/30" 
+                      : "text-slate-400 hover:text-slate-200 hover:bg-slate-700/50"
+                  }`}
+                >
+                  <Building2 size={16} /> College
                 </button>
                 <button
                   type="button"
                   onClick={() => setRole("industry")}
-                  className={`flex-1 py-3 px-4 rounded-lg flex items-center justify-center gap-2 font-bold text-sm transition-all duration-300 ${
+                  className={`py-3 px-2 rounded-lg flex items-center justify-center gap-1 font-bold text-xs transition-all duration-300 ${
                     role === "industry" 
                       ? "bg-emerald-600 text-white shadow-md shadow-emerald-900/30" 
                       : "text-slate-400 hover:text-slate-200 hover:bg-slate-700/50"
                   }`}
                 >
-                  <Building2 size={18} /> Industry
+                  <Building2 size={16} /> Industry
                 </button>
               </div>
 
@@ -577,7 +590,7 @@ export const Login = () => {
                             forgotPasswordEmail: email.trim(),
                           });
                         }}
-                        className="text-sm font-bold text-blue-300 hover:text-blue-200 transition-colors"
+                        className="appearance-none bg-transparent border-0 p-0 text-sm font-bold text-blue-300 hover:text-blue-200 focus:outline-none focus:ring-0"
                       >
                         Forgot Password?
                       </button>
@@ -596,8 +609,10 @@ export const Login = () => {
                     type="submit" 
                     disabled={loading}
                     className={`w-full py-4 rounded-xl font-bold flex items-center justify-center gap-2 transition-all shadow-lg mt-8 ${
-                      role === "student" 
-                        ? "bg-blue-600 hover:bg-blue-500 text-white shadow-blue-600/25" 
+                      role === "student"
+                        ? "bg-blue-600 hover:bg-blue-500 text-white shadow-blue-600/25"
+                        : role === "college"
+                        ? "bg-violet-600 hover:bg-violet-500 text-white shadow-violet-600/25"
                         : "bg-emerald-600 hover:bg-emerald-500 text-white shadow-emerald-600/25"
                     } disabled:opacity-70 disabled:cursor-not-allowed`}
                   >

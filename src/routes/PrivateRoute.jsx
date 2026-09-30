@@ -16,6 +16,8 @@ export const PrivateRoute = ({ allowedRoles }) => {
         // Fallback depending on user role
         if (user.role === "INDUSTRY") {
             return <Navigate to="/industry/dashboard" replace />;
+        } else if (user.role === "COLLEGE") {
+            return <Navigate to="/college/dashboard" replace />;
         } else {
             return <Navigate to="/student/dashboard" replace />;
         }

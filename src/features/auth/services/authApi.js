@@ -30,6 +30,8 @@ export const registerStudent = (data) =>
 export const loginStudent = (data) =>
   axiosInstance.post(`/auth/student/login`, data);
 
+export const loginCollege = (data) =>
+  axiosInstance.post(`/auth/college/login`, data);
 
 /* College APIs */
 export const sendCollegePasswordResetOtp = (email) =>

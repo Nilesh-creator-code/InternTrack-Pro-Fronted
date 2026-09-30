@@ -9,7 +9,8 @@ import {
   registerIndustry,
   loginIndustry,
   registerStudent,
-  loginStudent
+  loginStudent,
+  loginCollege
 } from "../services/authApi";
 import { getApiErrorMessage } from "../services/apiError";
 
@@ -158,6 +159,41 @@ export const useAuth = () => {
     }
   };
 
+  // Login College
+  const handleLoginCollege = async (email, password) => {
+    setLoading(true);
+    try {
+      const response = await loginCollege({ email, password });
+
+      let token = null;
+      let role = "COLLEGE";
+      let userData = {};
+
+      if (typeof response.data === "string") {
+        token = response.data;
+      } else if (response.data) {
+        const payload = response.data.data || response.data;
+        token = payload.token || payload.jwt || payload.jwtToken || payload.accessToken || payload.authToken || response.data.accessToken || response.data.jwtToken;
+        role = payload.role || response.data.role || "COLLEGE";
+        userData = payload && Object.keys(payload).length ? payload : response.data;
+      }
+
+      if (token) {
+        localStorage.setItem("authToken", token);
+      } else {
+        console.error("Token not found in college login response:", response.data);
+      }
+
+      dispatch(setUser({ ...userData, role, token, email }));
+      toast.success("College login successful!");
+      navigate("/college/dashboard");
+    } catch (error) {
+      toast.error(getApiErrorMessage(error, "Invalid college credentials"));
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return {
     loading,
     handleSendIndustryOtp,
@@ -165,6 +201,7 @@ export const useAuth = () => {
     handleRegisterIndustry,
     handleLoginIndustry,
     handleRegisterStudent,
-    handleLoginStudent
+    handleLoginStudent,
+    handleLoginCollege
   };
 };
