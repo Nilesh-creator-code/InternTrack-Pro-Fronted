@@ -40,6 +40,18 @@ export const RegisterRolePicker = () => {
             </div>
             <span className="role-arrow">→</span>
           </button>
+
+          <button
+            className="role-picker-btn"
+            onClick={() => navigate("/register-college")}
+          >
+            <div className="role-icon">🏫</div>
+            <div className="role-info">
+              <h3>College</h3>
+              <p>Register your college on the platform</p>
+            </div>
+            <span className="role-arrow">→</span>
+          </button>
         </div>
 
         <div className="auth-footer">

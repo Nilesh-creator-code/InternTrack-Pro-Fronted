@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useAuth } from "../hooks/useAuth";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import {
   ArrowLeft,
   Building2,
@@ -49,7 +49,8 @@ const maskEmail = (email) => {
 export const Login = () => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
-    const [role, setRole] = useState("student");
+    const location = useLocation();
+    const [role, setRole] = useState(location.state?.role || "student");
     const [error, setError] = useState("");
     const [forgotState, setForgotState] = useState(initialForgotPasswordState);
     
@@ -637,6 +638,13 @@ export const Login = () => {
                     className="flex-1 py-2.5 px-4 rounded-lg bg-slate-800/40 hover:bg-slate-700 border border-slate-700 hover:border-slate-600 text-sm font-bold text-slate-300 transition-all flex items-center justify-center gap-2"
                   >
                     <Building2 size={16} className="text-emerald-400" /> Register as Industry
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => navigate("/register-college")}
+                    className="flex-1 py-2.5 px-4 rounded-lg bg-slate-800/40 hover:bg-slate-700 border border-slate-700 hover:border-slate-600 text-sm font-bold text-slate-300 transition-all flex items-center justify-center gap-2"
+                  >
+                    <Building2 size={16} className="text-violet-400" /> Register as College
                   </button>
                 </div>
               </div>

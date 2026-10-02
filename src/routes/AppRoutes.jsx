@@ -3,6 +3,7 @@ import { AuthPage } from "../features/auth/pages/AuthPage";
 import { Login } from "../features/auth/pages/Login";
 import { RegisterStudent } from "../features/auth/pages/RegisterStudent";
 import { RegisterIndustry } from "../features/auth/pages/RegisterIndustry";
+import { RegisterCollege } from "../features/auth/pages/RegisterCollege";
 import { RegisterRolePicker } from "../features/auth/pages/RegisterRolePicker";
 import { PrivateRoute } from "./PrivateRoute";
 
@@ -36,6 +37,7 @@ export const AppRoutes = () => {
             <Route path="/register" element={<RegisterRolePicker />} />
             <Route path="/register-student" element={<RegisterStudent />} />
             <Route path="/register-industry" element={<RegisterIndustry />} />
+            <Route path="/register-college" element={<RegisterCollege />} />
 
             {/* Student Dashboard Routes */}
             <Route element={<PrivateRoute allowedRoles={["STUDENT"]} />}>

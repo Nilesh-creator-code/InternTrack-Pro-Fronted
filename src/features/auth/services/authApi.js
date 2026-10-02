@@ -33,6 +33,15 @@ export const loginStudent = (data) =>
 export const loginCollege = (data) =>
   axiosInstance.post(`/auth/college/login`, data);
 
+export const sendCollegeRegistrationOtp = (email) =>
+  axiosInstance.post(`/auth/college/send-otp?email=${encodeURIComponent(email)}`);
+
+export const verifyCollegeRegistrationOtp = (email, otp) =>
+  axiosInstance.post(`/auth/college/verify-otp`, { email, otp });
+
+export const registerCollege = (data) =>
+  axiosInstance.post(`/auth/college/register`, data);
+
 /* College APIs */
 export const sendCollegePasswordResetOtp = (email) =>
   axiosInstance.post(`/auth/college/forgot-password?email=${encodeURIComponent(email)}`);
