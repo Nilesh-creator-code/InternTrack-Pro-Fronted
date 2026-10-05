@@ -23,6 +23,7 @@ import { Profile } from "../features/student/pages/Profile";
 import { ApplyInternship } from "../features/student/pages/ApplyInternship";
 
 import { CollegeLayout } from "../features/college/components/CollegeLayout";
+import { Departments } from "../features/college/pages/Departments";
 import { CollegeDashboard, CollegePlaceholderPage } from "../features/college/pages/Dashboard";
 
 // Mock other components for now if they don't exist
@@ -66,7 +67,7 @@ export const AppRoutes = () => {
             <Route element={<PrivateRoute allowedRoles={["COLLEGE"]} />}>
               <Route path="/college" element={<CollegeLayout />}>
                 <Route path="dashboard" element={<CollegeDashboard />} />
-                <Route path="departments" element={<CollegePlaceholderPage title="Departments" description="This section will connect to the college departments API once the backend endpoint is available." requiredApi="GET /api/college/departments" />} />
+                <Route path="departments" element={<Departments />} />
                 <Route path="courses" element={<CollegePlaceholderPage title="Courses" description="This section will connect to the college courses API once the backend endpoint is available." requiredApi="GET /api/college/courses" />} />
                 <Route path="teachers" element={<CollegePlaceholderPage title="Teachers" description="This section will connect to the college teachers API once the backend endpoint is available." requiredApi="GET /api/college/teachers" />} />
                 <Route path="students" element={<CollegePlaceholderPage title="Students" description="This section will connect to the college students API once the backend endpoint is available." requiredApi="GET /api/college/students" />} />
